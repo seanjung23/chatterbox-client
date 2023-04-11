@@ -15,12 +15,16 @@ var App = {
     RoomsView.initialize();
     MessagesView.initialize();
 
+    // MessageView.initialize();
+    // theres no call to messageView
+
     // Fetch initial batch of messages
     App.startSpinner();
     App.fetch(App.stopSpinner);
 
     // TODO: Make sure the app loads data from the API
     // continually, instead of just once at the start.
+
   },
 
   fetch: function(callback = ()=>{}) {
@@ -28,8 +32,12 @@ var App = {
       // examine the response from the server request:
       console.log(data);
 
-      // TODO: Use the data to update Messages and Rooms
-      // and re-render the corresponding views.
+      Messages.update(data);
+      Rooms.update(data);
+
+      MessagesView.render();
+      RoomsView.render();
+      callback();
     });
   },
 
@@ -42,4 +50,6 @@ var App = {
     App.$spinner.fadeOut('fast');
     FormView.setStatus(false);
   }
+
+  // probably will need startMessages App.$chats.show();
 };

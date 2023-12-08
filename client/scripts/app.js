@@ -3,20 +3,16 @@
 // and begin making requests to the Parse API for data.
 
 var App = {
-
   $spinner: $('.spinner img'),
 
   username: 'anonymous',
 
-  initialize: function() {
+  initialize: function () {
     App.username = window.location.search.substr(10);
 
     FormView.initialize();
     RoomsView.initialize();
     MessagesView.initialize();
-
-    // MessageView.initialize();
-    // theres no call to messageView
 
     // Fetch initial batch of messages
     App.startSpinner();
@@ -24,32 +20,28 @@ var App = {
 
     // TODO: Make sure the app loads data from the API
     // continually, instead of just once at the start.
-
+    setInterval(App.fetch, 3000);
   },
 
-  fetch: function(callback = ()=>{}) {
-    Parse.readAll((data) => {
+  fetch: function (callback = () => {}) {
+    Parse.readAll(({ results }) => {
       // examine the response from the server request:
-      console.log(data);
+      console.log(results);
 
-      Messages.update(data);
-      Rooms.update(data);
-
-      MessagesView.render();
-      RoomsView.render();
-      callback();
+      // TODO: Use the data to update Messages and Rooms
+      // and re-render the corresponding views.
+      Messages.update(results, MessagesView.render);
+      Rooms.update(results, RoomsView.render);
     });
   },
 
-  startSpinner: function() {
+  startSpinner: function () {
     App.$spinner.show();
     FormView.setStatus(true);
   },
 
-  stopSpinner: function() {
+  stopSpinner: function () {
     App.$spinner.fadeOut('fast');
     FormView.setStatus(false);
-  }
-
-  // probably will need startMessages App.$chats.show();
+  },
 };

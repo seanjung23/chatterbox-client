@@ -3,31 +3,32 @@
 // with and manipulate the data.
 
 var Rooms = {
-
-  _data: new Set,
+  // TODO: Define how you want to store the list of rooms
+  storage: new Set(),
 
   // TODO: Define methods which allow you to add rooms, update the list,
   // mark a room as selected, etc.
   selected: 'lobby',
 
-  add: function(message) {
-
-    Rooms._data.add(message);
-    Rooms.selected = message.roomname;
+  items: function () {
+    return [...Rooms.storage];
   },
 
-  update: function(data) {
-    for (var i = 0; i < data.length; i++) {
-      var currentRoom = data[i];
-
-      if (currentRoom.roomname !== null) {
-        Rooms.add(currentRoom);
-      }
-    }
-    // console.log('rooms:', Rooms._data);
+  isSelected: function () {
+    return roomname === Rooms.selected;
   },
 
-  select: function(room) {
-    Rooms.selected = room;
-  }
+  add: function (roomname, callback = () => {}) {
+    Rooms.storage.add(roomname);
+    Rooms.selected = roomname;
+    callback(Rooms.items());
+  },
+
+  update: function (messages, callback = () => {}) {
+    messages.forEach((message) => {
+      Rooms.add(message.roomname);
+    });
+
+    callback(Rooms.items());
+  },
 };
